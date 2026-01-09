@@ -12,6 +12,8 @@ import {
 	onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+alert("index.js: チェック63");
+
 import {
 	firebaseDb,
 	getAuthenticatedUserContext
