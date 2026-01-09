@@ -126,6 +126,7 @@ function setupNavigation() {
 	}
 }
 
+alert("index.js: index 129");
 window.onload = initTradeBase;
 
 // ひとりで複数店舗に所属する場合に、選択画面を表示する関数
