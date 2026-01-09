@@ -61,7 +61,6 @@ const state = {
 };
 
 async function initTradeBase() {
-	alert("index.js: intTradeBase 01");
 	const statusText = document.getElementById('loading-text');
 	const log = (msg) => { if(statusText) statusText.innerText = msg; };
 
@@ -127,7 +126,6 @@ function setupNavigation() {
 	}
 }
 
-alert("index.js: windows onload");
 window.onload = initTradeBase;
 
 // ひとりで複数店舗に所属する場合に、選択画面を表示する関数
