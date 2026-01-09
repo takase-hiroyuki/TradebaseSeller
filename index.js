@@ -12,21 +12,15 @@ import {
 	onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-alert("index.js: index 15");
-
 import {
 	firebaseDb,
 	getAuthenticatedUserContext
 } from "./auth_integration.js";
 
-alert("index.js: index 22");
-
 import {
 	setupInventoryFilters,
 	refreshInventory
 } from "./inventory_view.js";
-
-alert("index.js: index 29");
 
 import {
 	showOrderPanel,
@@ -35,33 +29,23 @@ import {
 	hideOrderPanel
 } from "./inventory_action.js";
 
-alert("index.js: index 38");
-
 import {
 	setupHistoryFilters,
 	refreshHistory
 } from "./history_view.js";
-
-alert("index.js: index 45");
 
 import { 
 	cancelOrder, 
 	acceptOrder 
 } from "./history_action.js";
 
-alert("index.js: index 52");
-
 import {
 	updateSettingsView
 } from "./Settings_view.js";
 
-alert("index.js: index 58");
-
 import {
 	setupSettingsActions
 } from "./Settings_action.js";
-
-alert("index.js: index 64");
 
 // グローバル変数の定義（インポート先でも共有される想定）
 const state = {
@@ -76,7 +60,7 @@ const state = {
 	historyUnsubscribe: null
 };
 
-alert("index.js: index ");79
+alert("index.js: index 63");
 
 async function initTradeBase() {
 	const statusText = document.getElementById('loading-text');
