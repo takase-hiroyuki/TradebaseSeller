@@ -28,16 +28,15 @@ const app = initializeApp(firebaseConfig);
 export const firebaseDb = getFirestore(app);
 
 export async function getAuthenticatedUserContext() {
-	/*
-    await liff.init({ liffId: "2008802651-ZJlLamw2" });
+    await liff.init({ liffId: "2008851546-3mMNq5Ux" });
     if (!liff.isLoggedIn()) {
         liff.login();
         return null;
     }
     const profile = await liff.getProfile();
-	*/
+	
 	// 一時的なテスト用（LINEを通さずに起動させる場合）
-	const profile = { userId: "LINE_USER_ID_DUMMY_001" };
+	// const profile = { userId: "LINE_USER_ID_DUMMY_001" };
 	
 	const userSnap = await getDocs(
 		query(
