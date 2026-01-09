@@ -28,7 +28,9 @@ const app = initializeApp(firebaseConfig);
 export const firebaseDb = getFirestore(app);
 
 export async function getAuthenticatedUserContext() {
+	alert("auth 32");
     await liff.init({ liffId: "2008802651-ZJlLamw2" });
+	alert("auth 32");
     if (!liff.isLoggedIn()) {
         liff.login();
         return null;
