@@ -29,21 +29,22 @@ export const firebaseDb = getFirestore(app);
 
 export async function getAuthenticatedUserContext() {
 	/*
-	alert("auth 32");
     await liff.init({ liffId: "2008802651-ZJlLamw2" });
-	alert("auth 32");
     if (!liff.isLoggedIn()) {
         liff.login();
         return null;
     }
     const profile = await liff.getProfile();
-    const userSnap = await getDocs(
+	*/
+	// 一時的なテスト用（LINEを通さずに起動させる場合）
+	const profile = { userId: "LINE_USER_ID_DUMMY_001" };
+	
+	const userSnap = await getDocs(
 		query(
 			collection(firebaseDb, "users"),
 			where("lineUserId", "==", profile.userId)
 		)
 	);
-	*/
 	
     if (userSnap.empty) {
         window.location.href = 'buyer_first_setup.html';
