@@ -1,5 +1,5 @@
-
-const liff = window.liff;
+// 修正前: const liff = window.liff;
+const liff = window.liff || (window.parent && window.parent.liff);
 
 import {
 	initializeApp
