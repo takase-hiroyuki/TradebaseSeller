@@ -67,7 +67,9 @@ async function initTradeBase() {
 
 	try {
 		log("initTradeBase: LIFF認証中...");
+		alert("index.js: intTradeBase 02");
         const userContexts = await getAuthenticatedUserContext();
+		alert("index.js: intTradeBase 03");
         if (!userContexts) return; // ログイン中、または未登録ならリダイレクト済み
 
         // 複数店舗に所属している場合
