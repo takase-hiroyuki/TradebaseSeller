@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+	<title>0109買い手 </title>
+	<link rel="stylesheet" href="app_shell.css">
+	<style>
+		/* はみ出し防止と診断エリアの改善 */
+		#loading-view p {
+			word-break: break-all;
+			padding: 20px;
+			font-size: 14px;
+			line-height: 1.5;
+		}
+		/* 横スクロールコンテナの明示的指定 */
+		.filter-scroll {
+			display: flex;
+			overflow-x: auto;
+			gap: 8px;
+			padding: 10px;
+			background: white;
+			-webkit-overflow-scrolling: touch;
+		}
+	</style>
+</head>
+<body>
+	<div	id="loading-view"
+		style="position:fixed;
+			top:0;
+			left:0; 
+			width:100%; 
+			height:100%; 
+			background:white; 
+			z-index:9999; 
+			display:flex; 
+			justify-content:center; 
+			align-items:center;
+		">
+		<p id="loading-text">システム起動中...</p>
+	</div>
+
+	<div id="app-shell" style="display:none;">
+		<div class="app-header">
+			<div style="display: flex;">
+			<span id="display-shop-name">--</span>
+			（<span id="display-user-name">--</span>）
+			</div>
+		</div>
+
+		<!-- 在庫の一覧を表示する場所 -->
+		<div id="view-market" class="content-view active-view">
+			<div class="sticky-filter-header" style="position:sticky; top:0; z-index:100; background:white; border-bottom:1px solid #ddd;">
+				<div id="cat-tabs" class="filter-scroll"></div>
+				<div id="sup-tabs" class="filter-scroll" style="border-top: 1px solid #eee;"></div>
+			</div>
+			
+			<div id="inventory-items" style="padding: 10px;">
+				<table class="data-table">
+					<thead>
+						<tr>
+							<th>商品名</th>
+							<th>単価</th>
+							<th>在庫数</th>
+						</tr>
+					</thead>
+					<tbody id="inventory-body"></tbody>
+				</table>
+			</div>
+		</div>
+
+		<!-- 所属の一覧を表示する場所 -->
+		<div id="view-org-selection" class="content-view" style="display:none; padding: 20px;">
+			<div style="text-align:center; margin-bottom:30px;">
+				<h2 style="font-size:1.2em; color:#333;">利用する組織を選択</h2>
+				<p style="font-size:0.8em; color:#666;">複数の組織に所属しています。</p>
+			</div>
+			<div id="org-list-container" style="display: flex; flex-direction: column; gap: 16px;">
+				</div>
+		</div>
+
+		<!-- 履歴の一覧を表示する場所 -->
+		<div id="view-history" class="content-view" style="display:none;">
+			<div class="sticky-filter-header" style="position:sticky; top:0; z-index:100; background:white; border-bottom:1px solid #ddd;">
+				<div id="history-sup-tabs" class="filter-scroll" style="border-top: 1px solid #eee;"></div>
+			</div>
+			
+			<div id="history-list">
+				<table class="data-table">
+					<thead>
+						<tr>
+							<th>状態</th>
+							<th>日時</th>
+							<th>商品名</th>
+							<th>単価</th>
+							<th>数量</th>
+							<th>金額</th>
+						</tr>
+					</thead>
+					<tbody id="history-body"></tbody>
+				</table>
+			</div>
+		</div>
+
+		<!-- 設定の一覧を表示する場所 -->
+		<div id="view-settings" class="content-view" style="display:none;">
+			<div class="card" style="margin: 16px; background: white; padding: 16px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.08);">
+				<p>ログイン中のユーザー: <span id="settings-user-name">--</span></p>
+				<p>店舗ID: <span id="settings-shop-id">--</span></p>
+				<hr style="border: 0; border-top: 1px solid #eee; margin: 16px 0;">
+				<button id="btn-re-link" class="btn-primary" style="width: 100%;">別のIDを連携する</button>
+			</div>
+		</div>
+
+		<div class="bottom-nav">
+			<div class="nav-item" id="nav-market">🛒市場</div>
+			<div class="nav-item" id="nav-history">📋履歴</div>
+			<div class="nav-item" id="nav-settings">⚙️設定</div>
+		</div>
+	</div>
+
+
+		<!-- 在庫の一覧から注文をする -->
+		<div id="order-panel" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; align-items:center; justify-content:center;">
+			<div style="background:white; padding:20px; border-radius:12px; width:85%; max-width:300px; text-align:center;">
+				<h3 id="selected-product-name">--</h3>
+				<div style="font-size:2em; margin:10px 0;"><span id="current-qty">1</span></div>
+				<div id="total-price" style="font-weight:bold; margin-bottom:15px;">合計: ¥0</div>
+				<div class="qty-controls">
+					<button class="qty-btn" data-action="adjust" data-value="-10">-10</button>
+					<button class="qty-btn" data-action="adjust" data-value="-1">-1</button>
+					<button class="qty-btn" data-action="adjust" data-value="1">+1</button>
+					<button class="qty-btn" data-action="adjust" data-value="10">+10</button>
+				</div>
+				<hr style="margin:15px 0;">
+				<button data-action="submit" style="background:#00b900; color:white; width:100%; padding:10px; border:none; border-radius:6px; font-weight:bold;">注文する</button>
+				<button data-action="close" style="background:none; color:#666; width:100%; padding:10px; margin-top:5px; border:none; text-decoration:underline;">キャンセル</button>
+			</div>
+		</div>
+
+		<!-- 履歴の一覧から注文の詳細を表示し、次のアクショを実施する -->
+		<div id="history-detail-panel" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; align-items:center; justify-content:center;">
+			<div style="background:white; padding:20px; border-radius:12px; width:85%; max-width:300px;">
+				<h3 id="detail-product-name" style="text-align:center; margin-top:0;">商品詳細</h3>
+					<div id="detail-content" style="font-size:0.9em; line-height:1.8; margin:15px 0;">
+						<div style="display:flex; justify-content:space-between; border-bottom:1px solid #eee; padding:4px 0;">
+							<span>状態</span><span id="detail-status">--</span>
+						</div>
+						<div style="display:flex; justify-content:space-between; border-bottom:1px solid #eee; padding:4px 0;">
+							<span>日時</span><span id="detail-time">--</span>
+						</div>
+						<div style="display:flex; justify-content:space-between; border-bottom:1px solid #eee; padding:4px 0;">
+							<span>単価</span><span id="detail-price">--</span>
+						</div>
+						<div style="display:flex; justify-content:space-between; border-bottom:1px solid #eee; padding:4px 0;">
+							<span>数量</span><span id="detail-qty">--</span>
+						</div>
+						<div style="display:flex; justify-content:space-between; padding:8px 0; font-weight:bold; font-size:1.1em; color:#00b900;">
+							<span>合計金額</span><span id="detail-total">--</span>
+						</div>
+						<div style="font-size:0.7em; color:#999; margin-top:10px; text-align:right;">
+							ID: <span id="detail-id">--</span>
+						</div>
+					</div>
+
+				<div id="detail-actions" style="margin-bottom: 15px;"></div>
+				<button id="close-detail-btn" data-action="close" style="background:#666; color:white; width:100%; padding:10px; border:none; border-radius:6px; font-weight:bold;">閉じる</button>
+			</div>
+		</div>
+
+	<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+	<script type="module" src="index.js"></script>
+</body>
+</html>
+
+

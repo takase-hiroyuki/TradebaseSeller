@@ -1,0 +1,313 @@
+/* --- 変数定義と基本設定 --- */
+:root {
+    --tb-green: #00b900;
+    --tb-blue: #007bff;
+    --tb-yellow: #ffc107;
+    --gray-bg: #f4f4f4;
+    --white: #ffffff;
+    --safe-area-bottom: env(safe-area-inset-bottom);
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--gray-bg);
+    color: #333;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* --- ローディングとオーバーレイ --- */
+#loading-view, #selector-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+/* --- ヘッダー --- */
+.app-header {
+    background: var(--white);
+    padding: 12px 16px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* --- コンテンツ表示制御 (SPA) --- */
+.content-view {
+    display: none;
+    padding: 16px 0;
+    padding-bottom: calc(100px + var(--safe-area-bottom));
+}
+
+.active-view {
+    display: block;
+}
+
+/* --- カテゴリータブ (動的生成要素) --- */
+#category-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    -webkit-overflow-scrolling: touch;
+}
+
+#category-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+#histroy-list {
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+}
+
+.category-btn {
+    flex: 0 0 auto;
+    background: var(--white);
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.category-btn.active {
+    background: var(--tb-green);
+    color: var(--white);
+    border-color: var(--tb-green);
+/*    font-weight: bold; */
+}
+
+/* --- カードデザイン (市場・履歴共通) --- */
+.card, .inventory-card {
+    background: var(--white);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+    border: 1px solid #eee;
+}
+
+.inventory-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.inventory-info .product-name {
+    font-weight: bold;
+    font-size: 1.05em;
+}
+
+.inventory-info .seller-name {
+    font-size: 0.85em;
+    color: #888;
+}
+
+.price-tag {
+    color: var(--tb-green);
+    font-weight: bold;
+    margin-top: 4px;
+}
+
+/* --- ステータスバッジ --- */
+.status-badge {
+    padding: 2px 2px;
+    font-size: 0.75em;
+    color: var(--white);
+    font-weight: bold;
+}
+
+/* app_shell.css のステータスカラー部分 */
+
+.bg-created   { background-color: var(--tb-blue); }		/* 注文：青 */
+.bg-delivered { background-color: var(--tb-green); }	/* 納品：緑 */
+.bg-proposed  { background-color: var(--tb-yellow); color: #333; } /* 提案：黄 */
+.bg-accepted  { background-color: #6c757d; }			/* 承認：グレー */
+.bg-cancelled { background-color: #f44336; }			/* 削除：赤 */
+
+/* --- ボトムナビゲーション --- */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: calc(40px + var(--safe-area-bottom));
+    background: var(--white);
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding-bottom: var(--safe-area-bottom);
+    z-index: 1500;
+}
+
+.nav-item {
+    flex: 1;
+    text-align: center;
+    color: #888;
+    font-size: 1em;
+    cursor: pointer;
+    padding-top: 8px;
+}
+
+/* --- 組織選択画面のボタン --- */
+.org-select-btn {
+    width: 100%;
+    padding: 18px;
+    background-color: var(--white);
+    border: 2px solid var(--tb-green);
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    transition: background-color 0.2s;
+    box-sizing: border-box;
+}
+
+.org-select-btn:active {
+    background-color: #f0f0f0;
+}
+
+/* --- 発注パネル --- */
+.order-panel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: var(--white);
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.15);
+    padding: 24px 20px;
+    border-radius: 20px 20px 0 0;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 2500;
+    box-sizing: border-box;
+}
+
+.order-panel.show {
+    transform: translateY(0);
+}
+
+
+/* --- 発注パネル内の数量操作ボタン修正 --- */
+
+.qty-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px; /* ボタン間の間隔を適切に調整 */
+    margin: 24px 0;
+}
+
+.qty-btn {
+    width: 54px;  /* 44pxから拡大 */
+    height: 54px; /* 44pxから拡大 */
+    border-radius: 12px; /* 丸みをおさえて面積を確保 */
+    border: 1px solid #ddd;
+    background: #f9f9f9;
+    font-size: 16px; /* -10 などの文字が収まるサイズ */
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    active: background: #eee; /* タップ時の反応 */
+}
+
+/* 数字の表示サイズも微調整 */
+#current-qty {
+    font-size: 2.2em;
+    font-weight: bold;
+    min-width: 70px;
+    text-align: center;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.btn-primary {
+    flex: 2;
+    background: var(--tb-green);
+    color: var(--white);
+    border: none;
+    padding: 14px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.btn-secondary {
+    flex: 1;
+    background: var(--white);
+    border: 1px solid #ccc;
+    padding: 14px;
+    border-radius: 8px;
+}
+
+/* --- テーブル形式の装飾 --- */
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse; /* 枠線を重ねる */
+    background: var(--white);
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 0.95em;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.data-table th {
+	background: #f8f8f8;
+	padding: 10px 4px;
+	text-align: center; /* 中央寄せ */
+	border-bottom: 2px solid #eee;
+	font-size: 0.8em; /* 項目が多いので少し小さめに */
+	color: #666;
+	white-space: nowrap;
+}
+
+.data-table td {
+    padding: 4px 4px;
+    border-bottom: 1px solid #eee; /* 行の区切り線 */
+    vertical-align: middle;
+}
+
+.td-status	{ text-align: center; font-size: 0.8em; }
+.td-time	{ text-align: center; font-size: 0.8em; color: #888; }
+.td-name	{ text-align: left;   font-weight: bold; }
+.td-price	{ text-align: right;  color: var(--tb-green); }
+.td-qty		{ text-align: center; }
+.td-total	{ text-align: right;  font-weight: bold; }
+
+/* 履歴画面用のステータステキスト */
+.status-text {
+    font-size: 0.75em;
+    color: #888;
+    margin-top: 2px;
+}
+
+
