@@ -1,6 +1,4 @@
 // 修正前: const liff = window.liff;
-alert("index.js: auth 02");
-
 const liff = window.liff || (window.parent && window.parent.liff);
 
 import {
@@ -28,8 +26,6 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 export const firebaseDb = getFirestore(app);
-
-alert("index.js: auth 32");
 
 export async function getAuthenticatedUserContext() {
     await liff.init({ liffId: "2008802651-ZJlLamw2" });
