@@ -28,6 +28,7 @@ const app = initializeApp(firebaseConfig);
 export const firebaseDb = getFirestore(app);
 
 export async function getAuthenticatedUserContext() {
+	/*
 	alert("auth 32");
     await liff.init({ liffId: "2008802651-ZJlLamw2" });
 	alert("auth 32");
@@ -42,7 +43,8 @@ export async function getAuthenticatedUserContext() {
 			where("lineUserId", "==", profile.userId)
 		)
 	);
-    
+	*/
+	
     if (userSnap.empty) {
         window.location.href = 'buyer_first_setup.html';
         return null;
