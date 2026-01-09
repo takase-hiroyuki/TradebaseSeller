@@ -1,9 +1,15 @@
 // 修正前: const liff = window.liff;
+alert("index.js: チェック65");
+
 const liff = window.liff || (window.parent && window.parent.liff);
+
+alert("index.js: チェック66");
 
 import {
 	initializeApp
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+
+alert("index.js: チェック67");
 
 import {
 	getFirestore,
