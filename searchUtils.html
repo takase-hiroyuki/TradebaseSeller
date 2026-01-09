@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradeBase ID検索ツール</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; line-height: 1.6; max-width: 600px; margin: auto; }
+        .container { border: 1px solid #ccc; padding: 20px; border-radius: 8px; background: #f9f9f9; }
+        input { width: 70%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
+        button { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .result-section { margin-top: 20px; border-top: 2px solid #eee; pt: 10px; }
+        .id-badge { background: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-weight: bold; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>ID検索ツール</h2>
+    <p><small>店舗名またはユーザー名で前方一致検索を行います。</small></p>
+    <input type="text" id="keyword" placeholder="店舗名または氏名を入力">
+    <button id="searchBtn">検索</button>
+    <div id="results" class="result-section"></div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { 
+        getFirestore, 
+        collection, 
+        query, 
+        orderBy, 
+        startAt, 
+        endAt, 
+        getDocs 
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    // --- Firebase 設定 ---
+    const firebaseConfig = {
+        apiKey: "___FIREBASE_API_KEY___",
+        authDomain: "___FIREBASE_AUTH_DOMAIN___",
+        projectId: "___FIREBASE_PROJECT_ID___",
+        storageBucket: "___FIREBASE_STORAGE_BUCKET___",
+        messagingSenderId: "___FIREBASE_MESSAGING_SENDER_ID___",
+        appId: "___FIREBASE_APP_ID___"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    async function handleSearch() {
+        const keyword = document.getElementById('keyword').value.trim();
+        const resultsDiv = document.getElementById('results');
+        
+        if (!keyword) {
+            resultsDiv.innerHTML = "<p class='error'>キーワードを入力してください。</p>";
+            return;
+        }
+        
+        resultsDiv.innerHTML = "検索中...";
+        const searchEnd = keyword + "\uf8ff";
+        
+        try {
+            // 1. 店舗マスタ(shops)から検索
+            const shopQuery = query(
+                collection(db, "shops"),
+                orderBy("shopName"),
+                startAt(keyword),
+                endAt(searchEnd)
+            );
+
+            // 2. 個人アカウント(users)から検索
+            const userQuery = query(
+                collection(db, "users"),
+                orderBy("userName"),
+                startAt(keyword),
+                endAt(searchEnd)
+            );
+
+            const [shopSnap, userSnap] = await Promise.all([
+                getDocs(shopQuery),
+                getDocs(userQuery)
+            ]);
+
+            let html = "<h3>検索結果</h3>";
+            let found = false;
+
+            if (!shopSnap.empty) {
+                found = true;
+                html += "<h4>■ 店舗 (shops)</h4><ul>";
+                shopSnap.forEach(doc => {
+                    const data = doc.data();
+                    html += `<li>${data.shopName}: <span class="id-badge">${doc.id}</span></li>`;
+                });
+                html += "</ul>";
+            }
+
+            if (!userSnap.empty) {
+                found = true;
+                html += "<h4>■ ユーザー (users)</h4><ul>";
+                userSnap.forEach(doc => {
+                    const data = doc.data();
+                    // userId は sixCharId と同一である前提
+                    html += `<li>${data.userName} (${data.shopId}): <span class="id-badge">${data.userId}</span></li>`;
+                });
+                html += "</ul>";
+            }
+
+            if (!found) {
+                html += "<p>該当するIDは見つかりませんでした。</p>";
+            }
+
+            resultsDiv.innerHTML = html;
+        } catch (e) {
+            console.error(e);
+            resultsDiv.innerHTML = `<p class="error">エラーが発生しました: ${e.message}</p>`;
+        }
+    }
+
+    // イベントリスナーの登録
+    document.getElementById('searchBtn').addEventListener('click', handleSearch);
+    document.getElementById('keyword').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleSearch();
+    });
+</script>
+
+</body>
+</html>
