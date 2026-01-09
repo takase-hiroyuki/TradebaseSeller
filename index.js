@@ -60,9 +60,8 @@ const state = {
 	historyUnsubscribe: null
 };
 
-alert("index.js: index 63");
-
 async function initTradeBase() {
+	alert("index.js: intTradeBase 01");
 	const statusText = document.getElementById('loading-text');
 	const log = (msg) => { if(statusText) statusText.innerText = msg; };
 
@@ -126,7 +125,7 @@ function setupNavigation() {
 	}
 }
 
-alert("index.js: index 129");
+alert("index.js: windows onload");
 window.onload = initTradeBase;
 
 // ひとりで複数店舗に所属する場合に、選択画面を表示する関数
