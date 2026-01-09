@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradeBase - 初期連携とパスワード変更</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f4f4f4; }
+        .setup-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #00b900; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        button:disabled { background: #ccc; }
+        .step-hidden { display: none; }
+        .msg { margin-top: 10px; font-size: 14px; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+
+<div class="setup-card">
+    <div id="step1">
+        <h2>初期連携</h2>
+        <p>SVから発行された情報を入力してください。</p>
+        <input type="text" id="loginId" placeholder="6桁の個人ID (例: ki1234)">
+        <input type="password" id="tempPass" placeholder="初期パスワード">
+        <button id="btn-verify">認証して次へ</button>
+    </div>
+
+    <div id="step2" class="step-hidden">
+        <h2>パスワードの変更</h2>
+        <p>安全のため、新しいパスワードを設定してください。</p>
+        <input type="password" id="newPass1" placeholder="新しいパスワード">
+        <input type="password" id="newPass2" placeholder="新しいパスワード（再入力）">
+        <button id="btn-update">変更を確定して連携完了</button>
+    </div>
+
+    <div id="msg-area" class="msg"></div>
+</div>
+
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+
+<script type="module">
+    // 1. アップロード済みの auth_integration.js から DB インスタンスをインポート
+    import { firebaseDb } from './auth_integration.js';
+    
+    // 2. 必要な Firebase 機能を公式から直接インポート
+    import { getAuth, signInWithEmailAndPassword, updatePassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    // インポートした DB を使用
+    const db = firebaseDb;
+    // Auth は DB が紐付いている app から取得（auth_integration.js で初期化されたものと共有）
+    const auth = getAuth();
+
+    let currentLoginId = "";
+
+    // ボタンのイベントリスナーを設定（HTML側の onclick 属性を削除したため）
+    document.getElementById("btn-verify").addEventListener("click", verifyInitialAccount);
+    document.getElementById("btn-update").addEventListener("click", updatePasswordAndBind);
+
+    // ステップ1: 初期アカウントの確認
+    async function verifyInitialAccount() {
+        const loginId = document.getElementById("loginId").value.trim();
+        const tempPass = document.getElementById("tempPass").value;
+        const msgArea = document.getElementById("msg-area");
+
+        if (!loginId || !tempPass) {
+            msgArea.innerHTML = "<span class='error'>IDとパスワードを入力してください</span>";
+            return;
+        }
+
+        try {
+            msgArea.innerText = "認証中...";
+            // ID@example.com 形式でサインイン
+            await signInWithEmailAndPassword(auth, `${loginId}@example.com`, tempPass);
+            
+            currentLoginId = loginId;
+            document.getElementById("step1").classList.add("step-hidden");
+            document.getElementById("step2").classList.remove("step-hidden");
+            msgArea.innerText = "認証成功。新しいパスワードを設定してください。";
+        } catch (err) {
+            msgArea.innerHTML = `<span class='error'>認証失敗: IDまたはパスワードが違います</span>`;
+        }
+    }
+
+    // ステップ2: パスワード更新と LINE UID の紐付け
+    async function updatePasswordAndBind() {
+        const newPass1 = document.getElementById("newPass1").value;
+        const newPass2 = document.getElementById("newPass2").value;
+        const msgArea = document.getElementById("msg-area");
+
+        if (newPass1.length < 6) {
+            msgArea.innerHTML = "<span class='error'>パスワードは6文字以上必要です</span>";
+            return;
+        }
+        if (newPass1 !== newPass2) {
+            msgArea.innerHTML = "<span class='error'>パスワードが一致しません</span>";
+            return;
+        }
+
+        try {
+            msgArea.innerText = "パスワード更新中...";
+            // Firebase Authのパスワードを更新
+            await updatePassword(auth.currentUser, newPass1);
+
+            const userRef = doc(db, "users", currentLoginId);
+            // パスワード成功をもって isConfigured: true を書き込み
+            await updateDoc(userRef, {
+                isConfigured: true
+            });
+
+            msgArea.innerText = "LINE連携中...";
+            await liff.init({ liffId: "2008802651-ZJlLamw2" });
+            const profile = await liff.getProfile();
+            
+            // Firestoreのユーザー情報に LINE UID を書き込み
+            await updateDoc(userRef, {
+                lineUserId: profile.userId
+            });
+
+            msgArea.innerHTML = "<span style='color:green;'>✅ 全て完了しました！ダッシュボードへ戻ります</span>";
+            setTimeout(() => { window.location.href = "index.html"; }, 2000);
+        } catch (err) {
+            msgArea.innerHTML = `<span class='error'>エラー: ${err.message}</span>`;
+        }
+    }
+</script>
+</body>
+</html>
