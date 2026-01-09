@@ -19,6 +19,8 @@ import {
 	getAuthenticatedUserContext
 } from "./auth_integration.js";
 
+alert("index.js: チェック64");
+
 import {
 	setupInventoryFilters,
 	refreshInventory
