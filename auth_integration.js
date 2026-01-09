@@ -1,15 +1,11 @@
 // 修正前: const liff = window.liff;
-alert("index.js: チェック65");
+alert("index.js: auth 02");
 
 const liff = window.liff || (window.parent && window.parent.liff);
-
-alert("index.js: チェック66");
 
 import {
 	initializeApp
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-
-alert("index.js: チェック67");
 
 import {
 	getFirestore,
@@ -32,6 +28,8 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 export const firebaseDb = getFirestore(app);
+
+alert("index.js: auth 32");
 
 export async function getAuthenticatedUserContext() {
     await liff.init({ liffId: "2008802651-ZJlLamw2" });
