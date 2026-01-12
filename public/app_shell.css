@@ -1,0 +1,362 @@
+/* --- 変数定義と基本設定 --- */
+:root {
+    --tb-green: #00b900;
+    --tb-blue: #007bff;
+    --tb-yellow: #ffc107;
+    --gray-bg: #f4f4f4;
+    --white: #ffffff;
+    --safe-area-bottom: env(safe-area-inset-bottom);
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--gray-bg);
+    color: #333;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* --- ローディングと共通モーダル基盤 --- */
+#loading-view, .modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#loading-view {
+    background: rgba(255, 255, 255, 0.98);
+}
+
+.modal-content {
+    background: var(--white);
+    padding: 20px;
+    border-radius: 12px;
+    width: 85%;
+    max-width: 320px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    box-sizing: border-box;
+}
+
+/* --- ヘッダー --- */
+.app-header {
+    background: var(--white);
+    padding: 12px 16px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* --- コンテンツ表示制御 (SPA) --- */
+.content-view {
+    display: none;
+    padding: 16px 0;
+    padding-bottom: calc(100px + var(--safe-area-bottom));
+}
+
+.active-view {
+    display: block;
+}
+
+/* --- カテゴリー・取引先タブ --- */
+.filter-scroll {
+    display: flex;
+    overflow-x: auto;
+    gap: 8px;
+    padding: 10px;
+    background: white;
+    -webkit-overflow-scrolling: touch;
+}
+
+.filter-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+/* --- ステータスバッジ --- */
+.status-badge {
+    padding: 2px 6px;
+    font-size: 0.85em;
+    color: var(--white);
+    font-weight: bold;
+    border-radius: 4px;
+}
+
+.bg-ordered   { background-color: var(--tb-blue); }
+.bg-delivered { background-color: var(--tb-green); }
+.bg-proposed  { background-color: var(--tb-yellow); color: #333; }
+.bg-accepted  { background-color: #6c757d; }
+.bg-cancelled { background-color: #f44336; }
+
+/* --- データテーブル --- */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--white);
+    font-size: 0.95em;
+    margin-bottom: 20px;
+}
+
+.data-table th {
+    background: #f8f8f8;
+    padding: 10px 4px;
+    text-align: center;
+    border-bottom: 2px solid #eee;
+    font-size: 0.8em;
+    color: #666;
+    white-space: nowrap;
+}
+
+.data-table td {
+    padding: 8px 4px;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+}
+
+.td-status { text-align: center; }
+.td-time   { text-align: center; font-size: 0.8em; color: #888; }
+.td-name   { text-align: left; font-weight: bold; }
+.td-price  { text-align: right; color: var(--tb-green); }
+.td-qty    { text-align: center; }
+.td-total  { text-align: right; font-weight: bold; }
+
+/* --- 数量操作 (注文パネル用) --- */
+.qty-display {
+    font-size: 2.5em;
+    margin: 10px 0;
+    font-weight: bold;
+    text-align: center;
+}
+
+.qty-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.qty-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    background: #f9f9f9;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.qty-btn:active {
+    background: #eee;
+}
+
+/* --- 詳細・注文パネル内の要素 --- */
+.modal-title, .order-product-name {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #eee;
+    padding: 8px 0;
+    font-size: 0.9em;
+}
+
+.detail-row.total, .order-total {
+    border-bottom: none;
+    padding: 10px 0;
+    font-weight: bold;
+    font-size: 1.1em;
+    color: var(--tb-green);
+    text-align: center;
+}
+
+.detail-id-label {
+    font-size: 0.7em;
+    color: #999;
+    margin-top: 10px;
+    text-align: right;
+}
+
+/* --- ボタン類 --- */
+.btn-order-submit, .btn-primary {
+    width: 100%;
+    padding: 12px;
+    background: var(--tb-green);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1.1em;
+    cursor: pointer;
+}
+
+.btn-danger-outline {
+    width: 100%;
+    padding: 12px;
+    background: #fff0f0; /* 背景色をピンクに変更 */
+    border: 1px solid #f44336;
+    color: #f44336;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 12px; /* 下の「閉じる」ボタンとの間に隙間を作る */
+}
+
+.btn-close {
+    width: 100%;
+    padding: 12px;
+    background: #666;
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-link {
+    background: none;
+    color: #666;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* --- ボトムナビゲーション --- */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: calc(45px + var(--safe-area-bottom));
+    background: var(--white);
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding-bottom: var(--safe-area-bottom);
+    z-index: 1500;
+}
+
+.nav-item {
+    flex: 1;
+    text-align: center;
+    color: #888;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+/* --- 組織選択画面のボタン --- */
+.org-select-btn {
+    width: 100%;
+    padding: 18px;
+    background-color: var(--white);
+    border: 2px solid var(--tb-green);
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+/* --- Settings: 取引先管理用スタイル --- */
+.add-supplier-box {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.input-field {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px; /* iOS zoom防止 */
+}
+
+.btn-secondary {
+    padding: 8px 16px;
+    background-color: var(--tb-blue);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.supplier-list-container {
+    margin-top: 10px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.supplier-list-item {
+    display: flex;
+    flex-direction: column;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.supplier-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.supplier-master-name {
+    font-weight: bold;
+    font-size: 0.95em;
+}
+
+.supplier-id {
+    font-size: 0.8em;
+    color: #888;
+}
+
+.supplier-edit-row {
+    display: flex;
+    gap: 8px;
+}
+
+.supplier-name-input {
+    flex: 1;
+    padding: 6px;
+    border: 1px solid #eee;
+    background: #f9f9f9;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.btn-delete-mini {
+    padding: 6px 12px;
+    background-color: #ffecec;
+    color: #f44336;
+    border: 1px solid #f44336;
+    border-radius: 4px;
+    font-size: 0.8em;
+    cursor: pointer;
+}
+
+
