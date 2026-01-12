@@ -1,0 +1,36 @@
+name: Deploy to Firebase Hosting
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Secrets から firebase_config.js を生成
+      - name: Generate Firebase Config
+        run: |
+          echo "export const firebaseConfig = {" > public/firebase_config.js
+          echo "  apiKey: '${{ secrets.REACT_APP_FIREBASE_API_KEY }}'," >> public/firebase_config.js
+          echo "  authDomain: '${{ secrets.REACT_APP_FIREBASE_AUTH_DOMAIN }}'," >> public/firebase_config.js
+          echo "  projectId: '${{ secrets.REACT_APP_FIREBASE_PROJECT_ID }}'," >> public/firebase_config.js
+          echo "  storageBucket: '${{ secrets.REACT_APP_FIREBASE_STORAGE_BUCKET }}'," >> public/firebase_config.js
+          echo "  messagingSenderId: '${{ secrets.REACT_APP_FIREBASE_MESSAGING_SENDER_ID }}'," >> public/firebase_config.js
+          echo "  appId: '${{ secrets.REACT_APP_FIREBASE_APP_ID }}'" >> public/firebase_config.js
+          echo "};" >> public/firebase_config.js
+
+      # Firebase Hosting へデプロイ
+      - name: Deploy to Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_TRADEBASELIFF }}'
+          channelId: live
+          projectId: tradebaseseller
+
