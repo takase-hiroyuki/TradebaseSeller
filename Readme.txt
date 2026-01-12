@@ -4,7 +4,7 @@
 これからは、
 
 git add .
-git commit -m "接続確認02"
+git commit -m "Seller_01"
 git push origin main
 
 この3つのコマンドだけで、サクサクGitHubに保存できるようになります！
