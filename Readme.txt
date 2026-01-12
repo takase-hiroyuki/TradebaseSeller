@@ -4,7 +4,7 @@
 これからは、
 
 git add .
-git commit -m "Switch to seller user arev9d"
+git commit -m "Simplify index.js for connection test"
 git push origin main
 
 この3つのコマンドだけで、サクサクGitHubに保存できるようになります！

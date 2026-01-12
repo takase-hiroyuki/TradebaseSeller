@@ -1,7 +1,7 @@
 import { getAuthenticatedUserContext } from "./auth_integration.js";
-import { setupOrdersView, detachOrdersView } from "./view_orders.js";
-import { setupInventoryView, detachInventoryView } from "./view_inventory.js";
-import { setupSettingsView } from "./view_settings.js";
+// import { setupOrdersView, detachOrdersView } from "./view_orders.js";
+// import { setupInventoryView, detachInventoryView } from "./view_inventory.js";
+// import { setupSettingsView } from "./view_settings.js";
 
 // アプリ全体の状態
 const state = {
@@ -43,9 +43,9 @@ window.onload = async () => {
         setupNavigation();
 
         // 初期表示 (受注リスト)
-        setupOrdersView(state);
+        // setupOrdersView(state);
         // 設定画面にも値をセット
-        setupSettingsView(state);
+        // setupSettingsView(state);
 
         // 画面表示切り替え
         if(loading) loading.style.display = 'none';
@@ -58,6 +58,7 @@ window.onload = async () => {
 };
 
 function setupNavigation() {
+/*
     const navs = [
         { id: 'nav-orders', view: 'view-orders', setup: setupOrdersView, detach: detachOrdersView },
         { id: 'nav-inventory', view: 'view-inventory', setup: setupInventoryView, detach: detachInventoryView },
@@ -86,5 +87,6 @@ function setupNavigation() {
             if(nav.setup) nav.setup(state);
         });
     });
+*/
 }
 
