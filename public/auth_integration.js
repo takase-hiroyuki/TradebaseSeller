@@ -8,9 +8,9 @@ export const firebaseDb = getFirestore(app);
 
 // ユーザーコンテキストの取得
 export async function getAuthenticatedUserContext() {
-    // ★開発用ダミーID
-    // 本番環境(LIFF)で動作確認する際も、まずはこのIDで動くか確認します
-    const debugUserId = "ki1234"; 
+    // ★ここを書き換えました
+    // 画像にあるドキュメントIDを指定します
+    const debugUserId = "ak7fjc"; 
 
     // Firestoreからユーザー情報を取得
     const userRef = doc(firebaseDb, "users", debugUserId);
@@ -18,21 +18,28 @@ export async function getAuthenticatedUserContext() {
 
     if (!userSnap.exists()) {
         console.error("ユーザー登録がありません: " + debugUserId);
-        // エラーでも画面が止まらないようnullを返す
         return null;
     }
 
     const userData = userSnap.data();
     
     // 店舗情報の取得
-    const shopRef = doc(firebaseDb, "shops", userData.shopId);
-    const shopSnap = await getDoc(shopRef);
+    // 注意: 画像には users の情報しかありませんでしたが、
+    // shops コレクションに "adtkc9" というIDのデータがない場合、店舗名は「不明な店舗」になります。
+    let shopName = "不明な店舗";
+    if (userData.shopId) {
+        const shopRef = doc(firebaseDb, "shops", userData.shopId);
+        const shopSnap = await getDoc(shopRef);
+        if (shopSnap.exists()) {
+            shopName = shopSnap.data().shopName;
+        }
+    }
     
     return {
         userId: userData.userId,
         userName: userData.userName,
         shopId: userData.shopId,
-        shopName: shopSnap.exists() ? shopSnap.data().shopName : "不明な店舗",
+        shopName: shopName,
         role: userData.role
     };
 }

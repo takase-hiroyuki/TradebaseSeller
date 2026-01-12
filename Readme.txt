@@ -4,7 +4,7 @@
 これからは、
 
 git add .
-git commit -m "タイトル変更"
+git commit -m "接続確認02"
 git push origin main
 
 この3つのコマンドだけで、サクサクGitHubに保存できるようになります！
