@@ -9,8 +9,8 @@ export const firebaseDb = getFirestore(app);
 // ユーザーコンテキストの取得
 export async function getAuthenticatedUserContext() {
     // ★ここを書き換えました
-    // 画像にあるドキュメントIDを指定します
-    const debugUserId = "ak7fjc"; 
+    // 画像にあった「売り手(SELLER)」のユーザーIDを指定します
+    const debugUserId = "arev9d"; 
 
     // Firestoreからユーザー情報を取得
     const userRef = doc(firebaseDb, "users", debugUserId);
@@ -24,8 +24,6 @@ export async function getAuthenticatedUserContext() {
     const userData = userSnap.data();
     
     // 店舗情報の取得
-    // 注意: 画像には users の情報しかありませんでしたが、
-    // shops コレクションに "adtkc9" というIDのデータがない場合、店舗名は「不明な店舗」になります。
     let shopName = "不明な店舗";
     if (userData.shopId) {
         const shopRef = doc(firebaseDb, "shops", userData.shopId);

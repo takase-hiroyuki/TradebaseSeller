@@ -1,0 +1,74 @@
+これが、現在のそれぞれのファイルの、全量です。
+
+私はエンジニアリングにおいて**『まずエラーなくシステムを起動させる（スタートラインに立つ）』**ことを最優先します。
+ - [] 新しい機能やロジックを提案する前に、必ずインポートパス、ファイル名、文法ミスがないかを確認し、起動を妨げる要因があればそれを最優先で指摘してください。
+ - [] ファイル名や引数の整合性が取れていない『動かない提案』は一切不要です。
+ - [] 修正は一つずつ行い、その都度動作を確認しながら進めます。
+指示があるまで、ひとことも回答せず、だまっていてください。
+
+
+■カテゴリーを追加・削除・修正する
+(ローカル) 商品取引関連ツール/2aカテゴリーマスタ設定ツール.html
+https://tradebaseliff.web.app/SV/SV_category_master.html
+
+
+■新しい店舗を追加
+(ローカル) 03_id_店舗追加.html
+https://tradebaseliff.web.app/SV/SV_Add_Shop.html
+
+■新しい従業員を追加
+(ローカル) 04_id_個人登録.html
+https://tradebaseliff.web.app/SV/SV_Add_Member.html
+【登録成功】発行ID: cxhf5j / 初期PW: passcxhf5j
+
+■従業員を削除
+■店舗を削除（従業員がいるときは、店舗は削除できない）
+https://tradebaseliff.web.app/SV/SV_Delete.html
+
+
+■売り手、初期パス設定ツール
+https://tradebaseliff.web.app/seller/seller_first_setup.html
+
+■売り手が、新しい商品を店舗に並べる
+https://tradebaseliff.web.app/seller/seller_add_product.html
+
+■売り手が、在庫の値段や数量を管理する
+https://tradebaseliff.web.app/seller/seller_dashboard.html
+cgt6vr
+passcgt6vr
+
+■買い手が、商流（売り手）を追加・削除・並べ替えする
+(ローカル) 商品取引関連ツール/5取引先順序・編集ツール.html
+https://tradebaseliff.web.app/buyer/buyer_Add_Seller.html
+
+■買い手が、商流（売り手）の表示名を変更する
+https://tradebaseliff.web.app/buyer/buyer_Add_Seller.html
+
+■買い手が、商品を購入する
+スマホの LINE アプリ
+画面左の「市場」で、カテゴリーと店舗を選択
+商品をクリックして、数量を指定し、注文確定
+履歴に、売り手ごとに注文履歴が表示される。
+
+■買い手が、注文をキャンセルする
+配送前の注文はキャンセル可能
+
+■売り手が、商品を配送する(未収の商品のみ）
+■売り手が、配送した商品に対して価格を提案する（配達済み商品のみ）
+https://tradebaseliff.web.app/seller/seller_orders_view.html
+cgt6vr
+passcgt6vr
+
+■提案された価格に対して、買い手が承諾する
+スマホの LINE アプリ
+画面の「履歴」で、店舗を選択
+「提案」と表示された取引が表示される
+該当行をクリックして、「承諾」すると取引成立
+
+9. orders_view.js (配達管理UI): 【未着手】
+売り手側が「どの買い手から」「どの商品が」注文されているかを確認する専用のビューがまだ存在しません。
+
+10. order_action.js (配達・提案実行): 【未着手】
+受注ステータスを CREATED から DELIVERED 等へ更新するアクション、およびその際に loginId を刻印するロジックはこれから構築する必要があります。
+
+

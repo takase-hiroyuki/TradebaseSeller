@@ -4,7 +4,7 @@
 これからは、
 
 git add .
-git commit -m "Seller_01"
+git commit -m "Switch to seller user arev9d"
 git push origin main
 
 この3つのコマンドだけで、サクサクGitHubに保存できるようになります！
