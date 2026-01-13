@@ -12,20 +12,28 @@ const state = {
 
 // 起動処理
 window.onload = async () => {
-    // 起動時のチェックアラート（不要なら削除してください）
-    // alert("App Start");
-
     const loading = document.getElementById('loading-view');
     const shell = document.getElementById('app-shell');
+    const loadingText = document.getElementById('loading-text');
     
     try {
         console.log("起動開始...");
+        if(loadingText) loadingText.innerText = "ユーザー認証中...";
+
         const context = await getAuthenticatedUserContext();
-        
+
+        // もし context が空っぽ（未ログイン）なら、すぐにセットアップ画面へ飛ばす
         if (!context) {
-            // エラー表示
-            if(loading) loading.innerHTML = '<p style="color:red; text-align:center;">ユーザー情報の取得に失敗しました。<br>Firestoreのデータを確認してください。</p>';
-            return;
+            console.log("認証情報なし。セットアップ画面へ遷移します。");
+            window.location.href = "seller_setup.html";
+            return; // ここで処理を終わらせる
+        }
+
+        // 【修正】初回設定(パスワード変更等)が完了していない場合もセットアップ画面へ
+        if (!context.isConfigured) {
+             console.log("初期設定未完了。セットアップ画面へ遷移します。");
+             window.location.href = "seller_setup.html";
+             return;
         }
 
         // 状態の保存

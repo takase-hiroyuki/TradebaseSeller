@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradeBase Seller - 初期連携</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f4f4f4; }
+        .setup-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); max-width: 400px; margin: 0 auto; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #00b900; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        button:disabled { background: #ccc; }
+        .step-hidden { display: none; }
+        .msg { margin-top: 10px; font-size: 14px; word-break: break-all; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+
+<div class="setup-card">
+    <div style="text-align:center; margin-bottom:20px;">
+        <h3>Seller System Setup</h3>
+    </div>
+
+    <div id="step1">
+        <h4>1. 初期認証</h4>
+        <p style="font-size:0.9em;">SVから発行されたID情報を入力してください。</p>
+        <input type="text" id="loginId" placeholder="6桁の個人ID (例: ac1234)">
+        <input type="password" id="tempPass" placeholder="初期パスワード">
+        <button id="btn-verify" onclick="verifyInitialAccount()">認証して次へ</button>
+    </div>
+
+    <div id="step2" class="step-hidden">
+        <h4>2. パスワード変更</h4>
+        <p style="font-size:0.9em;">安全のため、新しいパスワードを設定してください。</p>
+        <input type="password" id="newPass1" placeholder="新しいパスワード">
+        <input type="password" id="newPass2" placeholder="新しいパスワード（再入力）">
+        <button id="btn-update" onclick="updatePasswordAndBind()">変更を確定して開始</button>
+    </div>
+
+    <div id="msg-area" class="msg"></div>
+</div>
+
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<script type="module">
+    // 既存のConfigファイルを流用
+    import { firebaseConfig } from "./firebase_config.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, updatePassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let currentLoginId = "";
+
+    // ステップ1: 初期アカウントの確認
+    window.verifyInitialAccount = async () => {
+        const loginId = document.getElementById("loginId").value.trim();
+        const tempPass = document.getElementById("tempPass").value;
+        const msgArea = document.getElementById("msg-area");
+
+        if (!loginId || !tempPass) {
+            msgArea.innerHTML = "<span class='error'>IDとパスワードを入力してください</span>";
+            return;
+        }
+
+        try {
+            msgArea.innerText = "認証中...";
+            // 憲法に基づき ID@example.com 形式でサインイン
+            await signInWithEmailAndPassword(auth, `${loginId}@example.com`, tempPass);
+            
+            currentLoginId = loginId;
+            document.getElementById("step1").classList.add("step-hidden");
+            document.getElementById("step2").classList.remove("step-hidden");
+            msgArea.innerText = "認証成功。新しいパスワードを設定してください。";
+        } catch (err) {
+            console.error(err);
+            msgArea.innerHTML = `<span class='error'>認証失敗: IDまたはパスワードが違います</span>`;
+        }
+    };
+
+    // ステップ2: パスワード更新と LINE UID の紐付け
+    window.updatePasswordAndBind = async () => {
+        const newPass1 = document.getElementById("newPass1").value;
+        const newPass2 = document.getElementById("newPass2").value;
+        const msgArea = document.getElementById("msg-area");
+
+        if (newPass1.length < 6) {
+            msgArea.innerHTML = "<span class='error'>パスワードは6文字以上必要です</span>";
+            return;
+        }
+        if (newPass1 !== newPass2) {
+            msgArea.innerHTML = "<span class='error'>パスワードが一致しません</span>";
+            return;
+        }
+
+        try {
+            msgArea.innerText = "パスワード更新中...";
+            await updatePassword(auth.currentUser, newPass1);
+
+            const userRef = doc(db, "users", currentLoginId);
+            
+            // 初回設定フラグ
+            await updateDoc(userRef, { isConfigured: true });
+
+            msgArea.innerText = "LINE連携中...";
+            // LIFF IDは環境に合わせて設定してください（現在は仮置き）
+            await liff.init({ liffId: "YOUR_SELLER_LIFF_ID_HERE" }).catch(e => {
+                console.warn("LIFF init failed, continuing without LINE ID bind for dev.", e);
+            });
+            
+            if (liff.isLoggedIn()) {
+                const profile = await liff.getProfile();
+                await updateDoc(userRef, { lineUserId: profile.userId });
+            }
+
+            msgArea.innerHTML = "<span style='color:green;'>✅ 完了しました！システムへ移動します...</span>";
+            setTimeout(() => { window.location.href = "index.html"; }, 2000);
+        } catch (err) {
+            console.error(err);
+            msgArea.innerHTML = `<span class='error'>エラー: ${err.message}</span>`;
+        }
+    };
+</script>
+</body>
+</html>
+
