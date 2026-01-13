@@ -1,5 +1,3 @@
-alert("check 01");
-
 import { getAuthenticatedUserContext } from "./auth_integration.js";
 // import { setupOrdersView, detachOrdersView } from "./view_orders.js";
 // import { setupInventoryView, detachInventoryView } from "./view_inventory.js";
@@ -14,14 +12,14 @@ const state = {
 
 // 起動処理
 window.onload = async () => {
+    alert("check 02");
+
     const loading = document.getElementById('loading-view');
     const shell = document.getElementById('app-shell');
     const loadingText = document.getElementById('loading-text');
     
     try {
-        console.log("起動開始...");
         if(loadingText) loadingText.innerText = "ユーザー認証中...";
-
         const context = await getAuthenticatedUserContext();
 
         // もし context が空っぽ（未ログイン）なら、すぐにセットアップ画面へ飛ばす
