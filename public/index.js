@@ -66,10 +66,11 @@ window.onload = async () => {
 };
 
 function setupNavigation() {
-/*
+    // ★ナビゲーション設定を有効化
     const navs = [
-        { id: 'nav-orders', view: 'view-orders', setup: setupOrdersView, detach: detachOrdersView },
-        { id: 'nav-inventory', view: 'view-inventory', setup: setupInventoryView, detach: detachInventoryView },
+        // OrdersとInventoryはまだファイルがないので一旦無効化しておく
+        { id: 'nav-orders', view: 'view-orders', setup: null, detach: null },
+        { id: 'nav-inventory', view: 'view-inventory', setup: null, detach: null },
         { id: 'nav-settings', view: 'view-settings', setup: setupSettingsView, detach: () => {} }
     ];
 
@@ -78,11 +79,11 @@ function setupNavigation() {
         if(!btn) return;
 
         btn.addEventListener('click', () => {
-            // 見た目のアクティブ切り替え（簡易的）
+            // 見た目のアクティブ切り替え
             document.querySelectorAll('.nav-item').forEach(el => el.style.color = '#888');
             btn.style.color = '#00b900'; // LINE GREEN
 
-            // すべてのViewを非表示 & リスナー解除
+            // すべてのViewを非表示
             navs.forEach(n => {
                 const el = document.getElementById(n.view);
                 if(el) el.style.display = 'none';
@@ -95,6 +96,5 @@ function setupNavigation() {
             if(nav.setup) nav.setup(state);
         });
     });
-*/
 }
 
