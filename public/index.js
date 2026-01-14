@@ -12,7 +12,7 @@ const state = {
 
 // 起動処理
 window.onload = async () => {
-    alert("check03");
+    alert("check04");
 
     const loading = document.getElementById('loading-view');
     const shell = document.getElementById('app-shell');
