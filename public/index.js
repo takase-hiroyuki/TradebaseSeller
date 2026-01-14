@@ -1,7 +1,7 @@
 import { getAuthenticatedUserContext } from "./auth_integration.js";
 // import { setupOrdersView, detachOrdersView } from "./view_orders.js";
 // import { setupInventoryView, detachInventoryView } from "./view_inventory.js";
-// import { setupSettingsView } from "./view_settings.js";
+import { setupSettingsView } from "./view_settings.js";
 
 // アプリ全体の状態
 const state = {
