@@ -4,7 +4,7 @@ cd ~/Desktop/TradeBase/LIFF_Seller
 ls -la
 tree -la
 git add .
-git commit -m "Simplify index.js for connection test"
+git commit -m "0119 2138"
 git push origin main
 
 ■WEBで編集したファイルをローカルにプルする
