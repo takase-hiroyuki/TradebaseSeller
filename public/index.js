@@ -12,7 +12,7 @@ const state = {
 
 // 起動処理
 window.onload = async () => {
-    alert("check08");
+    alert("check09");
 
     const loading = document.getElementById('loading-view');
     const shell = document.getElementById('app-shell');
@@ -39,25 +39,8 @@ window.onload = async () => {
 		// ▼ 認証成功後、アプリを開始する（ロジックの委譲）
         await startApp(context);
 
-        // ヘッダー表示更新
-		/*
-        const shopNameEl = document.getElementById('display-shop-name');
-        const userNameEl = document.getElementById('display-user-name');
-        if(shopNameEl) shopNameEl.innerText = context.shopName;
-        if(userNameEl) userNameEl.innerText = context.userName;
-		*/
-
-        // ナビゲーション設定
-        setupNavigation();
-
         // 初期表示 (受注リスト)
         // setupOrdersView(state);
-        // 設定画面にも値をセット
-        // setupSettingsView(state);
-
-        // 画面表示切り替え
-        if(loading) loading.style.display = 'none';
-        if(shell) shell.style.display = 'block';
 
     } catch (e) {
         console.error(e);
@@ -71,10 +54,23 @@ async function startApp(context) {
     state.userId = context.userId;
     state.userName = context.userName;
 
+	// ヘッダー表示更新
 	const shopNameEl = document.getElementById('display-shop-name');
     const userNameEl = document.getElementById('display-user-name');
     if(shopNameEl) shopNameEl.innerText = context.shopName;
     if(userNameEl) userNameEl.innerText = context.userName;
+
+    // ナビゲーション設定
+    setupNavigation();
+
+	// 設定画面にも値をセット
+    setupSettingsView(state);
+
+	// 画面表示切り替え
+	const loading = document.getElementById('loading-view');
+    const shell = document.getElementById('app-shell');
+    if(loading) loading.style.display = 'none';
+    if(shell) shell.style.display = 'block';
 }
 
 function setupNavigation() {
