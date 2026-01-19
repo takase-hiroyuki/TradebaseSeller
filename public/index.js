@@ -12,7 +12,7 @@ const state = {
 
 // 起動処理
 window.onload = async () => {
-    alert("check07");
+    alert("check08");
 
     const loading = document.getElementById('loading-view');
     const shell = document.getElementById('app-shell');
@@ -40,10 +40,12 @@ window.onload = async () => {
         await startApp(context);
 
         // ヘッダー表示更新
+		/*
         const shopNameEl = document.getElementById('display-shop-name');
         const userNameEl = document.getElementById('display-user-name');
         if(shopNameEl) shopNameEl.innerText = context.shopName;
         if(userNameEl) userNameEl.innerText = context.userName;
+		*/
 
         // ナビゲーション設定
         setupNavigation();
@@ -68,6 +70,11 @@ async function startApp(context) {
     state.myShopId = context.shopId;
     state.userId = context.userId;
     state.userName = context.userName;
+
+	const shopNameEl = document.getElementById('display-shop-name');
+    const userNameEl = document.getElementById('display-user-name');
+    if(shopNameEl) shopNameEl.innerText = context.shopName;
+    if(userNameEl) userNameEl.innerText = context.userName;
 }
 
 function setupNavigation() {
