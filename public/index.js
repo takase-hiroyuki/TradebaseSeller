@@ -36,10 +36,8 @@ window.onload = async () => {
              return;
         }
 
-        // 状態の保存
-        state.myShopId = context.shopId;
-        state.userId = context.userId;
-        state.userName = context.userName;
+		// ▼ 認証成功後、アプリを開始する（ロジックの委譲）
+        await startApp(context);
 
         // ヘッダー表示更新
         const shopNameEl = document.getElementById('display-shop-name');
@@ -64,6 +62,13 @@ window.onload = async () => {
         alert("起動エラー: " + e.message);
     }
 };
+
+async function startApp(context) {
+    // 状態の保存
+    state.myShopId = context.shopId;
+    state.userId = context.userId;
+    state.userName = context.userName;
+}
 
 function setupNavigation() {
     // ★ナビゲーション設定を有効化
