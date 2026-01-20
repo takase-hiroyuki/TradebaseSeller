@@ -1,4 +1,4 @@
-import { getAuthenticatedUserContext } from "./auth_integration.js";
+import { getAuthenticatedUserContext } from "./auth_integration.js?v=10";
 // import { setupOrdersView, detachOrdersView } from "./view_orders.js";
 // import { setupInventoryView, detachInventoryView } from "./view_inventory.js";
 import { setupSettingsView } from "./view_settings.js";
