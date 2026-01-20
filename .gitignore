@@ -69,5 +69,5 @@ node_modules/
 .dataconnect
 
 # Local config
-public/firebase_config.js
+# public/firebase_config.js
 
