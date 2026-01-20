@@ -52,14 +52,14 @@ export function getAuthenticatedUserContext() {
                     }
                 }
                 
-                resolve({
+                resolve([{
                     userId: userData.userId,
                     userName: userData.userName,
                     shopId: userData.shopId,
                     shopName: shopName,
                     role: userData.role,
                     isConfigured: userData.isConfigured // 判定用に追記
-                });
+                }]);
 
             } catch (error) {
                 console.error("ユーザー情報の取得中にエラー:", error);
