@@ -1,4 +1,4 @@
-alert("auth 15: Auto-Link Logic");
+alert("auth 14");
 
 import {
     initializeApp
