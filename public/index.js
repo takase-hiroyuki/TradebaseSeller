@@ -1,4 +1,4 @@
-import { getAuthenticatedUserContext } from "./auth_integration.js?v=15";
+import { getAuthenticatedUserContext } from "./auth_integration.js?v=16";
 // import { setupOrdersView, detachOrdersView } from "./view_orders.js";
 // import { setupInventoryView, detachInventoryView } from "./view_inventory.js";
 import { setupSettingsView } from "./view_settings.js";
@@ -12,7 +12,7 @@ const state = {
 
 // 起動処理
 window.onload = async () => {
-    alert("index 15");
+    alert("index 16");
 
     const loading = document.getElementById('loading-view');
     const shell = document.getElementById('app-shell');
