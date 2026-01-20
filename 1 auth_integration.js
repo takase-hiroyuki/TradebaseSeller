@@ -80,7 +80,7 @@ export function getAuthenticatedUserContext() {
                         }
                     } catch (err) {
                         // エラーが出てもアプリの起動は止めない
-                        alert(("LINE ID自動保存に失敗:", err);
+                        alert("LINE ID自動保存に失敗:"+err);
                     }
                 }
 

@@ -15,7 +15,7 @@ import { firebaseConfig } from "./firebase_config.js";
 const app = initializeApp(firebaseConfig);
 export const firebaseDb = getFirestore(app);
 const auth = getAuth(app);
-alert("auth 14");
+alert("auth 15");
 
 // ユーザーコンテキストの取得（非同期）
 export function getAuthenticatedUserContext() {
