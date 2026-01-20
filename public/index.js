@@ -12,7 +12,7 @@ const state = {
 
 // 起動処理
 window.onload = async () => {
-    alert("check09");
+    alert("check10");
 
     const loading = document.getElementById('loading-view');
     const shell = document.getElementById('app-shell');
@@ -20,23 +20,26 @@ window.onload = async () => {
     
     try {
         if(loadingText) loadingText.innerText = "ユーザー認証中...";
-        const context = await getAuthenticatedUserContext();
+        const contextList = await getAuthenticatedUserContext();
 
         // もし context が空っぽ（未ログイン）なら、すぐにセットアップ画面へ飛ばす
-        if (!context) {
+		if (!contextList || contextList.length === 0) {
             console.log("認証情報なし。セットアップ画面へ遷移します。");
             window.location.href = "seller_setup.html";
             return; // ここで処理を終わらせる
         }
 
-        // 【修正】初回設定(パスワード変更等)が完了していない場合もセットアップ画面へ
+		// とりあえず先頭の1つを使う（現状は1つしか返ってこないため）
+        const context = contextList[0];
+		
+        // 初回設定(パスワード変更等)が完了していない場合もセットアップ画面へ
         if (!context.isConfigured) {
              console.log("初期設定未完了。セットアップ画面へ遷移します。");
              window.location.href = "seller_setup.html";
              return;
         }
 
-		// ▼ 認証成功後、アプリを開始する（ロジックの委譲）
+		// 認証成功後、アプリを開始する（ロジックの委譲）
         await startApp(context);
 
         // 初期表示 (受注リスト)
