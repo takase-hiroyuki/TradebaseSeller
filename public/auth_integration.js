@@ -1,5 +1,13 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { 
+    getFirestore, 
+    doc, 
+    getDoc,
+    collection, // 追加
+    query,      // 追加
+    where,      // 追加
+    getDocs     // 追加
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { firebaseConfig } from "./firebase_config.js";
 
@@ -7,7 +15,7 @@ import { firebaseConfig } from "./firebase_config.js";
 const app = initializeApp(firebaseConfig);
 export const firebaseDb = getFirestore(app);
 const auth = getAuth(app);
-alert("auth 12");
+alert("auth 13");
 
 // ユーザーコンテキストの取得（非同期）
 export function getAuthenticatedUserContext() {
@@ -39,10 +47,36 @@ export function getAuthenticatedUserContext() {
                 }
 
                 const userData = userSnap.data();
-                
-                // 初回設定(isConfigured)が終わっていない場合は、ログイン未完了とみなすことも可能だが
-                // ここではデータだけ返して呼び出し元(index.js)で判断させる設計とします。
 
+// ▼▼▼ 【ここが今回の実験コード】 alertで結果を表示 ▼▼▼
+let message = "【データ確認】\n";
+message += "ログイン中: " + userData.userName + "\n";
+message += "LINE ID: " + (userData.lineUserId ? userData.lineUserId : "なし") + "\n\n";
+
+if (userData.lineUserId) {
+    // 同じLINE IDを持つ人を全員探す
+    const q = query(
+        collection(firebaseDb, "users"),
+        where("lineUserId", "==", userData.lineUserId)
+    );
+    const querySnapshot = await getDocs(q);
+
+    message += "★同じLINE IDを持つ人数: " + querySnapshot.size + "人\n";
+    message += "------------------\n";
+    querySnapshot.forEach((doc) => {
+        const d = doc.data();
+        message += "・" + d.userName + " (" + doc.id + ")\n";
+    });
+} else {
+    message += "★注意: このユーザーには LINE ID が保存されていません。\n紐付け確認ができませんでした。";
+}
+
+// 画面にポップアップ表示！
+alert(message);
+// ▲▲▲ 実験コードここまで ▲▲▲
+
+
+                
                 // 店舗情報の取得
                 let shopName = "未所属";
                 if (userData.shopId) {
