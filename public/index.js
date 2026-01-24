@@ -1,4 +1,4 @@
-import { getAuthenticatedUserContext } from "./auth_integration.js?v=21";
+import { getAuthenticatedUserContext } from "./auth_integration.js?v=22";
 // import { setupOrdersView, detachOrdersView } from "./view_orders.js";
 // import { setupInventoryView, detachInventoryView } from "./view_inventory.js";
 import { setupSettingsView } from "./view_settings.js";
@@ -12,7 +12,7 @@ const state = {
 
 // 起動処理
 window.onload = async () => {
-    alert("index 21");
+    alert("index 22");
 
     const loading = document.getElementById('loading-view');
     const shell = document.getElementById('app-shell');
@@ -113,11 +113,25 @@ function setupNavigation() {
     });
 }
 
-// ★追加: 複数アカウント選択時の処理
+// 複数アカウント選択時の処理
 function showSelectionScreen(list) {
     // ひとまずアラートで分岐の成功を確認します
     alert("Sellerが " + list.length + "人 見つかりました。\nこれから選択ボタンを表示します。");
     
-    // 次のステップで、ここにボタンを表示するコードを書きます
+    // 【1】画面の表示切り替え
+    const loading = document.getElementById('loading-view');
+    const shell = document.getElementById('app-shell');
+    const selectionView = document.getElementById('view-org-selection');
+    
+    // ローディングを消して、アプリ枠と選択画面を出す
+    if(loading) loading.style.display = 'none';
+    if(shell) shell.style.display = 'block';
+    if(selectionView) selectionView.style.display = 'block';
+
+    // 念のため、他のコンテンツや下のメニューバーは隠しておく
+    document.querySelectorAll('.content-view').forEach(el => el.style.display = 'none');
+    document.querySelector('.bottom-nav').style.display = 'none';
+
+	alert("ここまで");
 }
 
