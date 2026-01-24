@@ -1,4 +1,4 @@
-import { getAuthenticatedUserContext } from "./auth_integration.js?v=20";
+import { getAuthenticatedUserContext } from "./auth_integration.js?v=21";
 // import { setupOrdersView, detachOrdersView } from "./view_orders.js";
 // import { setupInventoryView, detachInventoryView } from "./view_inventory.js";
 import { setupSettingsView } from "./view_settings.js";
@@ -12,7 +12,7 @@ const state = {
 
 // 起動処理
 window.onload = async () => {
-    alert("index 20");
+    alert("index 21");
 
     const loading = document.getElementById('loading-view');
     const shell = document.getElementById('app-shell');
@@ -32,7 +32,7 @@ window.onload = async () => {
         // Sellerが複数いる場合は、ここで処理を止めて選択画面へ飛ばす
         if (contextList.length > 1) {
             showSelectionScreen(contextList);
-            return;
+            // return;
         }
         const context = contextList[0];
 		
