@@ -1,4 +1,4 @@
-import { getAuthenticatedUserContext } from "./auth_integration.js?v=19";
+import { getAuthenticatedUserContext } from "./auth_integration.js?v=20";
 // import { setupOrdersView, detachOrdersView } from "./view_orders.js";
 // import { setupInventoryView, detachInventoryView } from "./view_inventory.js";
 import { setupSettingsView } from "./view_settings.js";
@@ -12,7 +12,7 @@ const state = {
 
 // 起動処理
 window.onload = async () => {
-    alert("index 19");
+    alert("index 20");
 
     const loading = document.getElementById('loading-view');
     const shell = document.getElementById('app-shell');
@@ -29,10 +29,12 @@ window.onload = async () => {
             return; // ここで処理を終わらせる
         }
 
-		// とりあえず先頭の1つを使う（現状は1つしか返ってこないため）
+        // Sellerが複数いる場合は、ここで処理を止めて選択画面へ飛ばす
+        if (contextList.length > 1) {
+            showSelectionScreen(contextList);
+            return;
+        }
         const context = contextList[0];
-// リストの中から「SELLER」の役割を持つ人を優先的に探す（いなければ先頭を使う）
-//        const context = contextList.find(u => u.role === 'SELLER') || contextList[0];
 		
         // 初回設定(パスワード変更等)が完了していない場合もセットアップ画面へ
         if (!context.isConfigured) {
@@ -109,5 +111,13 @@ function setupNavigation() {
             if(nav.setup) nav.setup(state);
         });
     });
+}
+
+// ★追加: 複数アカウント選択時の処理
+function showSelectionScreen(list) {
+    // ひとまずアラートで分岐の成功を確認します
+    alert("Sellerが " + list.length + "人 見つかりました。\nこれから選択ボタンを表示します。");
+    
+    // 次のステップで、ここにボタンを表示するコードを書きます
 }
 
