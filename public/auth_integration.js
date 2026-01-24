@@ -84,51 +84,43 @@ export function getAuthenticatedUserContext() {
                     }
                 }
 
-                // データの状態と、同じIDを持つユーザーの検索 
-                let message = "【データ確認】\n";
-                message += "ログイン中: " + userData.userName + "\n";
-                message += "LINE ID: " + (userData.lineUserId ? userData.lineUserId : "なし") + "\n\n";
-
+                // データを配列に格納する
+                const contextList = [];
+                
                 if (userData.lineUserId) {
-                    // 同じLINE IDを持つ人を全員探す
-                    const q = query(
-                        collection(firebaseDb, "users"),
-                        where("lineUserId", "==", userData.lineUserId)
-                    );
+                    // LINE IDが一致するユーザーをすべて取得
+                    const q = query(collection(firebaseDb, "users"), where("lineUserId", "==", userData.lineUserId));
                     const querySnapshot = await getDocs(q);
-
-                    message += "★同じLINE IDを持つ人数: " + querySnapshot.size + "人\n";
-                    message += "------------------\n";
-                    querySnapshot.forEach((doc) => {
-                        const d = doc.data();
-                        message += "・" + d.userName + " (" + doc.id + ")\n";
-                    });
+                    querySnapshot.forEach(doc => contextList.push(doc.data()));
                 } else {
-                    message += "★注意: LINE IDがありません。\n(Webブラウザ等のため自動取得できませんでした)";
+                    // LINE連携していない場合は、自分自身だけを追加
+                    contextList.push(userData);
                 }
-
-                // 結果をポップアップ表示
-                alert(message);
                 
-                // 店舗情報の取得
-                let shopName = "未所属";
-                if (userData.shopId) {
-                    const shopRef = doc(firebaseDb, "shops", userData.shopId);
-                    const shopSnap = await getDoc(shopRef);
-                    if (shopSnap.exists()) {
-                        shopName = shopSnap.data().shopName;
+                // 全員の店舗名を取得して、正式なリストを作成する
+                const finalResult = await Promise.all(contextList.map(async (user) => {
+                    let sName = "未所属";
+                    if (user.shopId) {
+                        try {
+                            const sRef = doc(firebaseDb, "shops", user.shopId);
+                            const sSnap = await getDoc(sRef);
+                            if (sSnap.exists()) sName = sSnap.data().shopName;
+                        } catch (e) {
+                            sName = "取得エラー";
+                        }
                     }
-                }
-                
-                // 配列で返す（将来の複数選択UIのため）
-                resolve([{
-                    userId: userData.userId,
-                    userName: userData.userName,
-                    shopId: userData.shopId,
-                    shopName: shopName,
-                    role: userData.role,
-                    isConfigured: userData.isConfigured
-                }]);
+                    
+                    return {
+                        userId: user.userId,
+                        userName: user.userName,
+                        shopId: user.shopId,
+                        shopName: sName,
+                        role: user.role,
+                        isConfigured: user.isConfigured
+                    };
+                }));
+
+                resolve(finalResult);
 
             } catch (error) {
                 console.error("ユーザー情報の取得中にエラー:", error);
