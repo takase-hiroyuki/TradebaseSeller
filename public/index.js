@@ -1,4 +1,4 @@
-import { getAuthenticatedUserContext } from "./auth_integration.js?v=22";
+import { getAuthenticatedUserContext } from "./auth_integration.js?v=23";
 // import { setupOrdersView, detachOrdersView } from "./view_orders.js";
 // import { setupInventoryView, detachInventoryView } from "./view_inventory.js";
 import { setupSettingsView } from "./view_settings.js";
@@ -12,7 +12,7 @@ const state = {
 
 // 起動処理
 window.onload = async () => {
-    alert("index 22");
+    alert("index 23");
 
     const loading = document.getElementById('loading-view');
     const shell = document.getElementById('app-shell');
@@ -131,6 +131,25 @@ function showSelectionScreen(list) {
     // 念のため、他のコンテンツや下のメニューバーは隠しておく
     document.querySelectorAll('.content-view').forEach(el => el.style.display = 'none');
     document.querySelector('.bottom-nav').style.display = 'none';
+
+    const container = document.getElementById('org-list-container');
+    if(!container) return;
+    container.innerHTML = ""; // 前回の表示が残っていれば消す
+
+    // リストの人数分だけボタンを作る
+    list.forEach(user => {
+        const btn = document.createElement('div');
+        
+        // スマホで押しやすいカード型のデザイン設定
+        btn.style.cssText = "padding:16px; margin-bottom:12px; background:#fff;"
+            +" border:1px solid #ddd; border-radius:8px; cursor:pointer;"
+            +" box-shadow:0 2px 4px rgba(0,0,0,0.05);";
+        
+        // ボタンの中に文字を入れる（店舗名とユーザー名）
+        btn.innerHTML = `
+            <div style="font-weight:bold; font-size:1.1em; color:#00b900;">${user.shopName}</div>
+            <div style="font-size:0.9em; color:#555; margin-top:4px;">${user.userName}</div>
+        `;
 
 	alert("ここまで");
 }
