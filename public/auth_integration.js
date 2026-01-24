@@ -1,4 +1,4 @@
-alert("auth 17");
+alert("auth 19");
 
 import {
     initializeApp
@@ -98,7 +98,11 @@ export function getAuthenticatedUserContext() {
                 }
                 
                 // 全員の店舗名を取得して、正式なリストを作成する
-                const finalResult = await Promise.all(contextList.map(async (user) => {
+                // ★変更: ここで SELLER の役割を持つユーザーだけに絞り込みます
+                const sellers = contextList.filter(u => u.role === 'SELLER');
+                const finalResult = await Promise.all(sellers.map(async (user) => {
+
+//                const finalResult = await Promise.all(contextList.map(async (user) => {
                     let sName = "未所属";
                     if (user.shopId) {
                         try {

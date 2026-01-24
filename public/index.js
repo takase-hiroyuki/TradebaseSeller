@@ -1,4 +1,4 @@
-import { getAuthenticatedUserContext } from "./auth_integration.js?v=18";
+import { getAuthenticatedUserContext } from "./auth_integration.js?v=19";
 // import { setupOrdersView, detachOrdersView } from "./view_orders.js";
 // import { setupInventoryView, detachInventoryView } from "./view_inventory.js";
 import { setupSettingsView } from "./view_settings.js";
@@ -12,7 +12,7 @@ const state = {
 
 // 起動処理
 window.onload = async () => {
-    alert("index 18");
+    alert("index 19");
 
     const loading = document.getElementById('loading-view');
     const shell = document.getElementById('app-shell');
@@ -30,9 +30,9 @@ window.onload = async () => {
         }
 
 		// とりあえず先頭の1つを使う（現状は1つしか返ってこないため）
-//        const context = contextList[0];
+        const context = contextList[0];
 // リストの中から「SELLER」の役割を持つ人を優先的に探す（いなければ先頭を使う）
-        const context = contextList.find(u => u.role === 'SELLER') || contextList[0];
+//        const context = contextList.find(u => u.role === 'SELLER') || contextList[0];
 		
         // 初回設定(パスワード変更等)が完了していない場合もセットアップ画面へ
         if (!context.isConfigured) {
