@@ -1,4 +1,4 @@
-import { getAuthenticatedUserContext } from "./auth_integration.js?v=26";
+import { getAuthenticatedUserContext } from "./auth_integration.js?v=27";
 // import { setupOrdersView, detachOrdersView } from "./view_orders.js";
 // import { setupInventoryView, detachInventoryView } from "./view_inventory.js";
 import { setupSettingsView } from "./view_settings.js";
@@ -12,7 +12,7 @@ const state = {
 
 // 起動処理
 window.onload = async () => {
-    alert("index 26");
+    alert("index 27");
 
     const loading = document.getElementById('loading-view');
     const shell = document.getElementById('app-shell');
@@ -123,14 +123,14 @@ function showSelectionScreen(list) {
     const shell = document.getElementById('app-shell');
     const selectionView = document.getElementById('view-org-selection');
     
+    // 念のため、他のコンテンツや下のメニューバーは隠しておく
+    document.querySelectorAll('.content-view').forEach(el => el.style.display = 'none');
+    document.querySelector('.bottom-nav').style.display = 'none';
+
     // ローディングを消して、アプリ枠と選択画面を出す
     if(loading) loading.style.display = 'none';
     if(shell) shell.style.display = 'block';
     if(selectionView) selectionView.style.display = 'block';
-
-    // 念のため、他のコンテンツや下のメニューバーは隠しておく
-    document.querySelectorAll('.content-view').forEach(el => el.style.display = 'none');
-    document.querySelector('.bottom-nav').style.display = 'none';
 
     const container = document.getElementById('org-list-container');
     if(!container) return;
@@ -155,6 +155,6 @@ function showSelectionScreen(list) {
     });
 
 
-	alert("ここまで26");
+	alert("ここまで27");
 }
 
