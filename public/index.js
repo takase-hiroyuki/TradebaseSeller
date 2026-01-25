@@ -1,4 +1,4 @@
-import { getAuthenticatedUserContext } from "./auth_integration.js?v=25";
+import { getAuthenticatedUserContext } from "./auth_integration.js?v=26";
 // import { setupOrdersView, detachOrdersView } from "./view_orders.js";
 // import { setupInventoryView, detachInventoryView } from "./view_inventory.js";
 import { setupSettingsView } from "./view_settings.js";
@@ -12,7 +12,7 @@ const state = {
 
 // 起動処理
 window.onload = async () => {
-    alert("index 25");
+    alert("index 26");
 
     const loading = document.getElementById('loading-view');
     const shell = document.getElementById('app-shell');
@@ -150,8 +150,11 @@ function showSelectionScreen(list) {
             <div style="font-weight:bold; font-size:1.1em; color:#00b900;">${user.shopName}</div>
             <div style="font-size:0.9em; color:#555; margin-top:4px;">${user.userName}</div>
         `;
+        // 作ったボタンを、それぞれ画面に追加する
+        container.appendChild(btn);
     });
 
-	alert("ここまで");
+
+	alert("ここまで26");
 }
 
