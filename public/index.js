@@ -1,4 +1,4 @@
-import { getAuthenticatedUserContext } from "./auth_integration.js?v=27";
+import { getAuthenticatedUserContext } from "./auth_integration.js?v=28";
 // import { setupOrdersView, detachOrdersView } from "./view_orders.js";
 // import { setupInventoryView, detachInventoryView } from "./view_inventory.js";
 import { setupSettingsView } from "./view_settings.js";
@@ -12,7 +12,7 @@ const state = {
 
 // 起動処理
 window.onload = async () => {
-    alert("index 27");
+    alert("index 28");
 
     const loading = document.getElementById('loading-view');
     const shell = document.getElementById('app-shell');
@@ -150,6 +150,18 @@ function showSelectionScreen(list) {
             <div style="font-weight:bold; font-size:1.1em; color:#00b900;">${user.shopName}</div>
             <div style="font-size:0.9em; color:#555; margin-top:4px;">${user.userName}</div>
         `;
+
+        // クリックされた時の動作
+        btn.onclick = () => {
+             // 選択画面を隠して、下のナビゲーションバーを表示する
+             const selectionView = document.getElementById('view-org-selection');
+             if(selectionView) selectionView.style.display = 'none';
+             document.querySelector('.bottom-nav').style.display = 'flex';
+             
+             // 選ばれたユーザー情報を使ってアプリを開始する
+             startApp(user);
+        };
+
         // 作ったボタンを、それぞれ画面に追加する
         container.appendChild(btn);
     });
