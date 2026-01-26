@@ -4,6 +4,7 @@ import { firebaseDb } from "./auth_integration.js";
 let unsubscribe = null;
 
 export function setupInventoryView(state) {
+    alert("inv 32");
     const listBody = document.getElementById('inventory-body');
     if(!listBody) return;
 
@@ -33,6 +34,21 @@ function openEditPanel(id, data) {
     document.getElementById('edit-price').value = data.price;
     document.getElementById('edit-qty-display').innerText = data.qty;
     
+    // ★修正: HTMLにあるボタンの設定を読み込んで動作させる
+    panel.querySelectorAll('.qty-btn').forEach(btn => {
+        btn.onclick = () => {
+            const disp = document.getElementById('edit-qty-display');
+            const current = parseInt(disp.innerText);
+            const delta = parseInt(btn.getAttribute('data-d')); // -10 や +10 を取得
+            
+            let nextVal = current + delta;
+            if(nextVal < 0) nextVal = 0; // マイナスにはしない
+            
+            disp.innerText = nextVal;
+        };
+    });
+
+    // パネルを表示
     panel.style.display = 'flex';
     
     const closeBtn = document.getElementById('btn-close-edit');
