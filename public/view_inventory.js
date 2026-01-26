@@ -1,10 +1,18 @@
-import { collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { firebaseDb } from "./auth_integration.js";
+import {
+    collection,
+    onSnapshot,
+    updateDoc,
+    serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+import {
+    firebaseDb
+} from "./auth_integration.js";
 
 let unsubscribe = null;
 
 export function setupInventoryView(state) {
-    alert("inv 32");
+    alert("inv 33");
     const listBody = document.getElementById('inventory-body');
     if(!listBody) return;
 
