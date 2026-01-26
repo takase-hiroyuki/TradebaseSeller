@@ -12,7 +12,7 @@ import {
 let unsubscribe = null;
 
 export function setupInventoryView(state) {
-    alert("inv 33");
+    alert("inv 34");
     const listBody = document.getElementById('inventory-body');
     if(!listBody) return;
 
@@ -30,13 +30,13 @@ export function setupInventoryView(state) {
                 <td class="td-price">¥${data.price}</td>
                 <td class="td-qty" style="font-weight:bold;">${data.qty}</td>
             `;
-            tr.onclick = () => openEditPanel(doc.id, data);
+            tr.onclick = () => openEditPanel(doc.ref, data, state.userId);
             listBody.appendChild(tr);
         });
     });
 }
 
-function openEditPanel(id, data) {
+function openEditPanel(ref, data, userId) {
     const panel = document.getElementById('edit-panel');
     document.getElementById('edit-product-name').innerText = data.productName;
     document.getElementById('edit-price').value = data.price;
