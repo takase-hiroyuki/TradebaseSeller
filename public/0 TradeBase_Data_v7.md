@@ -1,4 +1,4 @@
-# TradeBase データ構造指示書 (Ver 7)
+# TradeBase データ構造指示書 (Ver 8.1)
 
 ## 1. 序文：階層構造の明文化
 本バージョンでは、システム内の各コレクションおよびサブコレクションの「物理的な格納パス（階層構造）」を定義します。TradeBaseは店舗（shops）をデータの基点とし、権限管理とスケーラビリティを最適化した階層設計を採用します。
@@ -22,7 +22,7 @@
 - **パス**: `users/{userId}`
 - **ID**: `sixCharId`（例: `ki1234`）
 - **構造**:
-	* **userId**: string (sixCharIdと同一)
+	* **userId**: string (本ドキュメントのIDと同一。`sixCharId`を格納)
 	* **userName**: string (個人名)
 	* **shopId**: string (所属店舗ID: by1001, se1001等)
 	* **role**: 'BUYER' | 'SELLER' | 'SV'
@@ -34,7 +34,7 @@
 - **パス**: `shops/{shopId}`
 - **ID**: 商店ID（例: `se1001`）
 - **構造**:
-	* **shopId**: string
+	* **shopId**: string (本ドキュメントのIDと同一。手動設定された商店ID)
 	* **shopName**: string
 	* **type**: 'BUYER' | 'SELLER'
 	* **createdAt**: timestamp
@@ -47,7 +47,7 @@
 - **パス**: `shops/{shopId}/inventory/{productId}`
 - **ID**: `商店ID_p_連番`（例: `se1001_p_001`）
 - **構造**:
-	* **id**: string (ドキュメントIDと一致)
+	* **id**: string (本ドキュメントのIDと同一。ルールに基づき生成された商品ID)
 	* **productName**: string
 	* **category**: string (system_master/category_definitionに準拠)
 	* **price**: number
@@ -59,24 +59,37 @@
 - **パス**: `shops/{shopId}/suppliers/{sellerShopId}`
 - **ID**: 売り手側の店舗ID
 - **構造**:
-	* **sellerShopId**: string
+	* **sellerShopId**: string (本ドキュメントのIDと同一。対象となる売り手の店舗ID)
 	* **sellerShopName**: string (売り手の店舗名、一覧表示用冗長記録)
 	* **sortOrder**: number
+	* **createdAt**: timestamp
+
+#### 5. 在庫履歴（受払帳） ★New
+- **パス**: `shops/{shopId}/inventory_logs/{logId}`
+- **ID**: Firestore自動生成ID（20文字程度のランダム英数字）
+- **構造**:
+	* **logId**: string (本ドキュメントのIDと同一。Firestoreが自動生成したキー文字列)
+	* **productId**: string (対象の商品ID。例: `se1001_p_001`)
+	* **productName**: string (商品名、一覧表示用冗長記録)
+	* **delta**: number (増減値。例: +10, -5)
+	* **resultQty**: number (変更後の確定在庫数)
+	* **reason**: 'MANUAL_ADJUSTMENT' | 'ORDER_ALLOCATION' | 'ORDER_CANCEL'
+	* **executedBy**: string (実行者のuserId)
 	* **createdAt**: timestamp
 
 ---
 
 ### C. 取引・管理ドメイン（ルートコレクション）
 
-#### 5. 取引履歴（注文）
+#### 6. 取引履歴（注文）
 - **パス**: `orders/{orderId}`
-- **ID**: Firestore自動生成ID（20文字のランダム英数字）
+- **ID**: Firestore自動生成ID（20文字程度のランダム英数字）
 - **構造**:
-	* **orderId**: string (ドキュメントIDと同一)
+	* **orderId**: string (本ドキュメントのIDと同一。Firestoreが自動生成したキー文字列)
 	* **buyerShopId**: string (発注元の店舗ID)
 	* **sellerShopId**: string (受注先の店舗ID)
-    * **productId**: string, (商品のID)
-    * **productName**: string, (商品名、冗長記録)
+    * **productId**: string, (商品のID)
+    * **productName**: string, (商品名、冗長記録)
 	* **status**: 'ORDERED' | 'DELIVERED' | 'PROPOSED' | 'ACCEPTED' | 'CANCELLED'
 
 	* **orderedQty**: number (順序1: 発注時の注文数)
@@ -97,7 +110,7 @@
 	* **cancelledBy**: string (順序5: 削除実行者のuserId)
 	* **cancelledAt**: timestamp (順序5: 削除実行日時)
 
-#### 6. システムマスタ（SV管理）
+#### 7. システムマスタ（SV管理）
 - **パス**: `system_master/{definitionName}`
 - **ID**: `category_definition` 等
 - **構造**:
@@ -105,11 +118,11 @@
 	* **updatedBy**: string (SVのuserId)
 	* **updatedAt**: timestamp
 
-#### 7. ID発行プール
+#### 8. ID発行プール
 - **パス**: `id_pool/{sixCharId}`
 - **ID**: 生成ロジックに基づき作成された6文字ID
 - **構造**:
-	* **sixCharId**: string (ドキュメントIDと同一)
+	* **sixCharId**: string (本ドキュメントのIDと同一。生成された6文字ID)
 	* **status**: 'AVAILABLE' | 'USED'
 	* **usedAt**: timestamp | null
 	* **assignedTo**: string | null (使用後のuserIdを格納)
@@ -121,6 +134,7 @@
 2. **IDの整合性**: 在庫アイテムのドキュメントIDと、フィールド内の `id` は常に一致させてください。
 3. **マスタの統治**: カテゴリー名は必ずSVが定義したマスタから取得し、勝手な名称追加を禁止します。
 4. **名称の柔軟性**: 商品名（productName）は、IDを変えることなくいつでも修正可能とします。
+5. **履歴の義務**: 在庫数（qty）を変更する際は、必ず同時に在庫履歴（inventory_logs）への追記を行ってください（可能な限りトランザクション処理またはバッチ書き込みを利用）。 ★New
 
 ---
 
@@ -160,4 +174,3 @@ function generateConstitutionId() {
 // 使用例: 有効なIDが生成されるまでループ
 // let newId;
 // while (!(newId = generateConstitutionId()));
-
