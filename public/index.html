@@ -96,9 +96,11 @@
             <div style="margin-bottom: 15px;">
                 <label style="display:block; font-size:0.8em; color:#666;">在庫数</label>
                 <div class="qty-controls" style="margin: 5px 0;">
-                    <button class="qty-btn" data-action="qty-minus">-1</button>
+                    <button class="qty-btn" data-d="-10">-10</button>
+                    <button class="qty-btn" data-d="-1">-1</button>
                     <span id="edit-qty-display" style="font-size:1.5em; font-weight:bold; width:60px; text-align:center;">0</span>
-                    <button class="qty-btn" data-action="qty-plus">+1</button>
+                    <button class="qty-btn" data-d="1">+1</button>
+                    <button class="qty-btn" data-d="10">+10</button>
                 </div>
             </div>
 
@@ -120,7 +122,7 @@
     </div>
 
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-    <script type="module" src="index.js?v=30"></script>
+    <script type="module" src="index.js?v=31"></script>
 </body>
 </html>
 
