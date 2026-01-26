@@ -1,6 +1,6 @@
-import { getAuthenticatedUserContext } from "./auth_integration.js?v=33";
+import { getAuthenticatedUserContext } from "./auth_integration.js?v=34";
 // import { setupOrdersView, detachOrdersView } from "./view_orders.js";
-import { setupInventoryView, detachInventoryView } from "./view_inventory.js?v=33";
+import { setupInventoryView, detachInventoryView } from "./view_inventory.js?v=34";
 import { setupSettingsView } from "./view_settings.js";
 
 // アプリ全体の状態
