@@ -79,8 +79,6 @@ async function startApp(context) {
 }
 
 function setupNavigation() {
-	alert("index 30");
-
     // ★ナビゲーション設定を有効化
     const navs = [
         // OrdersとInventoryはまだファイルがないので一旦無効化しておく
