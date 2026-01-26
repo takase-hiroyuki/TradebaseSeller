@@ -1,6 +1,6 @@
 import { getAuthenticatedUserContext } from "./auth_integration.js";
 // import { setupOrdersView, detachOrdersView } from "./view_orders.js";
-import { setupInventoryView, detachInventoryView } from "./view_inventory.js?v=29";
+import { setupInventoryView, detachInventoryView } from "./view_inventory.js?v=30";
 import { setupSettingsView } from "./view_settings.js";
 
 // アプリ全体の状態
@@ -12,8 +12,6 @@ const state = {
 
 // 起動処理
 window.onload = async () => {
-    alert("index 29");
-
     const loading = document.getElementById('loading-view');
     const shell = document.getElementById('app-shell');
     const loadingText = document.getElementById('loading-text');
@@ -81,11 +79,13 @@ async function startApp(context) {
 }
 
 function setupNavigation() {
+	alert("index 30");
+
     // ★ナビゲーション設定を有効化
     const navs = [
         // OrdersとInventoryはまだファイルがないので一旦無効化しておく
         { id: 'nav-orders', view: 'view-orders', setup: null, detach: null },
-        { id: 'nav-inventory', view: 'view-inventory', setup: null, detach: null },
+		{ id: 'nav-inventory', view: 'view-inventory', setup: setupInventoryView, detach: detachInventoryView },
         { id: 'nav-settings', view: 'view-settings', setup: setupSettingsView, detach: () => {} }
     ];
 
