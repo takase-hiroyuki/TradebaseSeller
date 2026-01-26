@@ -1,6 +1,6 @@
-import { getAuthenticatedUserContext } from "./auth_integration.js?v=28";
+import { getAuthenticatedUserContext } from "./auth_integration.js";
 // import { setupOrdersView, detachOrdersView } from "./view_orders.js";
-// import { setupInventoryView, detachInventoryView } from "./view_inventory.js";
+import { setupInventoryView, detachInventoryView } from "./view_inventory.js?v=29";
 import { setupSettingsView } from "./view_settings.js";
 
 // アプリ全体の状態
@@ -12,7 +12,7 @@ const state = {
 
 // 起動処理
 window.onload = async () => {
-    alert("index 28");
+    alert("index 29");
 
     const loading = document.getElementById('loading-view');
     const shell = document.getElementById('app-shell');
@@ -115,9 +115,6 @@ function setupNavigation() {
 
 // 複数アカウント選択時の処理
 function showSelectionScreen(list) {
-    // ひとまずアラートで分岐の成功を確認します
-    alert("Sellerが " + list.length + "人 見つかりました。\nこれから選択ボタンを表示します。");
-    
     // 【1】画面の表示切り替え
     const loading = document.getElementById('loading-view');
     const shell = document.getElementById('app-shell');
@@ -165,8 +162,5 @@ function showSelectionScreen(list) {
         // 作ったボタンを、それぞれ画面に追加する
         container.appendChild(btn);
     });
-
-
-	alert("ここまで27");
 }
 
