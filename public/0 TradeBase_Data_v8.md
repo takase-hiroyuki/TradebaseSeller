@@ -143,7 +143,6 @@
 ### 憲法第3条準拠 6文字ID生成仕様
 システム内で使用される `sixCharId` は、以下のアルゴリズムに従って生成する。
 
-''''
 const CHARS_NUM = "1234567890";
 const CHARS_ALPHA = "acdefghjkmnprtuvwxy";
 const ALL_CHARS = CHARS_NUM + CHARS_ALPHA;
@@ -175,4 +174,3 @@ function generateConstitutionId() {
 // 使用例: 有効なIDが生成されるまでループ
 // let newId;
 // while (!(newId = generateConstitutionId()));
-''''
