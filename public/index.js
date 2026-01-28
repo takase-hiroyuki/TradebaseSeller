@@ -1,6 +1,6 @@
 import { getAuthenticatedUserContext } from "./auth_integration.js";
-// import { setupOrdersView, detachOrdersView } from "./view_orders.js";
-import { setupInventoryView, detachInventoryView } from "./view_inventory.js?v=36";
+import { setupOrdersView, detachOrdersView } from "./view_orders.js?v=37";
+import { setupInventoryView, detachInventoryView } from "./view_inventory.js";
 import { setupSettingsView } from "./view_settings.js";
 
 // アプリ全体の状態
@@ -45,7 +45,7 @@ window.onload = async () => {
         await startApp(context);
 
         // 初期表示 (受注リスト)
-        // setupOrdersView(state);
+        setupOrdersView(state);
 
     } catch (e) {
         console.error(e);

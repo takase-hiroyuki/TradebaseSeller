@@ -4,6 +4,7 @@ import { firebaseDb } from "./auth_integration.js";
 let unsubscribe = null;
 
 export function setupOrdersView(state) {
+    alert("ord 37");
     const listBody = document.getElementById('orders-body');
     if(!listBody) return;
     
@@ -12,7 +13,7 @@ export function setupOrdersView(state) {
     const q = query(
         collection(firebaseDb, "orders"),
         where("sellerShopId", "==", state.myShopId),
-        orderBy("orderId", "desc")
+        orderBy("orderedAt", "desc")
     );
 
     unsubscribe = onSnapshot(q, (snapshot) => {
