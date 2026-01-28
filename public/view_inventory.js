@@ -12,7 +12,7 @@ import {
 let unsubscribe = null;
 
 export function setupInventoryView(state) {
-    alert("inv 34");
+    alert("inv 35");
     const listBody = document.getElementById('inventory-body');
     if(!listBody) return;
 
@@ -67,5 +67,28 @@ function openEditPanel(ref, data, userId) {
 
 export function detachInventoryView() {
     if (unsubscribe) unsubscribe();
+}
+
+// 独立させた保存処理の関数
+async function saveProduct(ref, userId, btnElement) {
+    const newPrice = document.getElementById('edit-price').value;
+    const newQty = document.getElementById('edit-qty-display').innerText;
+    const panel = document.getElementById('edit-panel');
+
+    try {
+        btnElement.innerText = "保存中...";
+        await updateDoc(ref, {
+            price: parseInt(newPrice),
+            qty: parseInt(newQty),
+            updatedAt: serverTimestamp(),
+            updatedBy: userId 
+        });
+        panel.style.display = 'none';
+    } catch (e) {
+        console.error(e);
+        alert("保存失敗: " + e.message);
+    } finally {
+        btnElement.innerText = "保存する";
+    }
 }
 
