@@ -12,7 +12,7 @@ import {
 let unsubscribe = null;
 
 export function setupInventoryView(state) {
-    alert("inv 35");
+    alert("inv 36");
     const listBody = document.getElementById('inventory-body');
     if(!listBody) return;
 
@@ -55,6 +55,12 @@ function openEditPanel(ref, data, userId) {
             disp.innerText = nextVal;
         };
     });
+	
+	// 保存ボタンと、saveProduct 関数をつなぐ
+    const saveBtn = document.getElementById('btn-save-product');
+    const newSaveBtn = saveBtn.cloneNode(true); 
+    saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
+    newSaveBtn.onclick = () => saveProduct(ref, userId, newSaveBtn);
 
     // パネルを表示
     panel.style.display = 'flex';
