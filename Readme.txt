@@ -4,7 +4,7 @@ cd ~/Desktop/TradeBase/LIFF_Seller
 ls -la
 tree -la
 git add .
-git commit -m "0128 37"
+git commit -m "0131 38"
 git push origin main
 
 ■WEBで編集したファイルをローカルにプルする

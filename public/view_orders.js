@@ -4,7 +4,7 @@ import { firebaseDb } from "./auth_integration.js";
 let unsubscribe = null;
 
 export function setupOrdersView(state) {
-    alert("ord 38");
+    alert("ord 39");
 
      // すでに監視中であれば、前の監視（他人の店の監視）を強制停止する
     if (unsubscribe) {
@@ -24,6 +24,16 @@ export function setupOrdersView(state) {
 
     unsubscribe = onSnapshot(q, (snapshot) => {
         listBody.innerHTML = "";
+
+        // ★デバッグ用：現在どのIDでデータを表示しているか、リストの先頭に必ず表示する
+      // onSnapshotの内側に書くことで、データ更新されても消えずに残ります。
+        const debugRow = document.createElement('tr');
+        debugRow.innerHTML = `<td colspan="4" style="background:#eee; font-size:12px; color:#333; text-align:center;">
+            ログイン中のID: <b>${state.myShopId}</b>
+        </td>`;
+        listBody.appendChild(debugRow);
+
+
         if (snapshot.empty) {
             listBody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px;">注文はありません</td></tr>';
             return;
