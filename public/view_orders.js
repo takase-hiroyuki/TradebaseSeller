@@ -4,10 +4,16 @@ import { firebaseDb } from "./auth_integration.js";
 let unsubscribe = null;
 
 export function setupOrdersView(state) {
-    alert("ord 37");
+    alert("ord 38");
+
+     // すでに監視中であれば、前の監視（他人の店の監視）を強制停止する
+    if (unsubscribe) {
+        unsubscribe();
+        unsubscribe = null;
+     }
     const listBody = document.getElementById('orders-body');
     if(!listBody) return;
-    
+
     listBody.innerHTML = '<tr><td colspan="4">読み込み中...</td></tr>';
 
     const q = query(
