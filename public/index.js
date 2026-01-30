@@ -1,5 +1,5 @@
 import { getAuthenticatedUserContext } from "./auth_integration.js";
-import { setupOrdersView, detachOrdersView } from "./view_orders.js?v=39";
+import { setupOrdersView, detachOrdersView } from "./view_orders.js?v=40";
 import { setupInventoryView, detachInventoryView } from "./view_inventory.js";
 import { setupSettingsView } from "./view_settings.js";
 
@@ -81,9 +81,8 @@ async function startApp(context) {
 function setupNavigation() {
     // ★ナビゲーション設定を有効化
     const navs = [
-        // OrdersとInventoryはまだファイルがないので一旦無効化しておく
-        { id: 'nav-orders', view: 'view-orders', setup: null, detach: null },
-		{ id: 'nav-inventory', view: 'view-inventory', setup: setupInventoryView, detach: detachInventoryView },
+        { id: 'nav-orders', view: 'view-orders', setup: setupOrdersView, detach: detachOrdersView },
+        { id: 'nav-inventory', view: 'view-inventory', setup: setupInventoryView, detach: detachInventoryView },
         { id: 'nav-settings', view: 'view-settings', setup: setupSettingsView, detach: () => {} }
     ];
 
